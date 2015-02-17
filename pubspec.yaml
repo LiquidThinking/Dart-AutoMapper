@@ -1,6 +1,7 @@
 name: auto_mapper
-description: >
-  A library for automatically mapping objects from one type to another
 version: 0.0.1
+author: Liquid Thinking Ltd
+description: A library for automatically mapping objects from one type to another
+homepage: https://github.com/LiquidThinking/Dart-AutoMapper
 dev_dependencies:
   unittest: any
