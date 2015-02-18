@@ -5,6 +5,8 @@ import 'package:auto_mapper/auto_mapper.dart';
 
 import 'dart:collection';
 
+part 'objects.dart';
+
 main( )
 {
 	group( 'AutoMapper', ( )
@@ -83,95 +85,32 @@ main( )
 			expect( result.list, new isInstanceOf<CustomList<TestDto>>( ) );
 			expect( result.list[0].stringProperty, "Hello" );
 		} );
+
+
+		test( 'Mapping from one inherited type to another with only primitive properties correctly copies base and extended properties', ( )
+		{
+			var dateTime = new DateTime.now( );
+			var testEntity = new InheritedEntity( )
+				..stringProperty = "test"
+				..intProperty = 1
+				..dateTimeProperty = dateTime
+				..doubleProperty = 1.1
+				..boolProperty = true
+				..numProperty = 1
+			..extraProperty = 1;
+
+			InheritedDto testDto = AutoMapper.map( testEntity, InheritedDto );
+
+			expect( testDto.stringProperty, "test" );
+			expect( testDto.intProperty, 1 );
+			expect( testDto.dateTimeProperty, dateTime );
+			expect( testDto.doubleProperty, 1.1 );
+			expect( testDto.boolProperty, true );
+			expect( testDto.numProperty, 1 );
+			expect( testDto.extraProperty, 1 );
+		} );
+
 	} );
 }
 
 
-class TestEntity
-{
-	String stringProperty;
-	int intProperty;
-	DateTime dateTimeProperty;
-	double doubleProperty;
-	bool boolProperty;
-	num numProperty;
-}
-
-class TestDto
-{
-	String stringProperty;
-	int intProperty;
-	DateTime dateTimeProperty;
-	double doubleProperty;
-	bool boolProperty;
-	num numProperty;
-}
-
-
-class TestEntity2
-{
-	TestEntity test;
-}
-
-class TestDto2
-{
-	TestDto test;
-}
-
-class ListEntity
-{
-	List<String> list;
-}
-
-class ListDto
-{
-	List<String> list;
-}
-
-class NonPrimitiveListEntity
-{
-	List<TestEntity> list;
-}
-
-class NonPrimitiveListDto
-{
-	List<TestDto> list;
-}
-
-class CustomListEntity
-{
-	CustomList<TestEntity> list;
-}
-
-class CustomListDto
-{
-	CustomList<TestDto> list;
-}
-
-class CustomList<E> extends ListBase<E>
-{
-	var innerList = new List<E>( );
-
-	int get length
-	=> innerList.length;
-
-	void set length( int length )
-	{
-		innerList.length = length;
-	}
-
-	void operator []=( int index, E value ) {
-		innerList[index] = value;
-	}
-
-	E operator []( int index ) => innerList[index];
-
-	// Though not strictly necessary, for performance reasons
-	// you should implement add and addAll.
-
-	void add( E value )
-	=> innerList.add( value );
-
-	void addAll( Iterable<E> all )
-	=> innerList.addAll( all );
-}

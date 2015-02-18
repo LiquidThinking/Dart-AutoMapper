@@ -10,10 +10,15 @@ class AutoMapper
 		return (value == null || value is bool || value is num || value is String || value is DateTime || value is double);
 	}
 
-	static Iterable<DeclarationMirror> _getVariableMirrors( InstanceMirror fromMirror )
+	static Iterable<DeclarationMirror> _getVariableMirrors( ClassMirror fromMirror )
 	{
-		var fromVariables = fromMirror.type.declarations.values.where( ( d )
-																	   => d is VariableMirror );
+		var fromVariables = fromMirror.declarations.values.where( ( d )
+																	   => d is VariableMirror ).toList();
+		var superClass = fromMirror.superclass;
+
+		if(superClass != null && superClass.reflectedType != Object)
+			fromVariables.addAll(_getVariableMirrors(superClass));
+
 		return fromVariables;
 	}
 
@@ -44,8 +49,8 @@ class AutoMapper
 		var fromMirror = reflect( from );
 		var toMirror = reflect( result );
 
-		var fromVariables = _getVariableMirrors( fromMirror );
-		var toVariables = _getVariableMirrors( toMirror );
+		var fromVariables = _getVariableMirrors( fromMirror.type );
+		var toVariables = _getVariableMirrors( toMirror.type );
 
 		for ( var variableMirror in fromVariables )
 		{
