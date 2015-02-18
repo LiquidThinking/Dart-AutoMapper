@@ -5,30 +5,30 @@ import 'dart:mirrors';
 class AutoMapper
 {
 
-	bool _isPrimitive( dynamic value )
+	static bool _isPrimitive( dynamic value )
 	{
 		return (value == null || value is bool || value is num || value is String || value is DateTime || value is double);
 	}
 
-	Iterable<DeclarationMirror> _getVariableMirrors( InstanceMirror fromMirror )
+	static Iterable<DeclarationMirror> _getVariableMirrors( InstanceMirror fromMirror )
 	{
 		var fromVariables = fromMirror.type.declarations.values.where( ( d )
 																	   => d is VariableMirror );
 		return fromVariables;
 	}
 
-	String _getVariableName( VariableMirror variableMirror )
+	static String _getVariableName( VariableMirror variableMirror )
 	{
 		return MirrorSystem.getName( variableMirror.simpleName );
 	}
 
-	dynamic _instantiateType( Type toType )
+	static dynamic _instantiateType( Type toType )
 	{
 		var resultList = reflectClass( toType ).newInstance( const Symbol( '' ), [] ).reflectee;
 		return resultList;
 	}
 
-	dynamic _mapList( dynamic from, Type toType )
+	static dynamic _mapList( dynamic from, Type toType )
 	{
 		var resultList = _instantiateType( toType );
 		var listObjectType = reflectType( toType ).typeArguments[0].reflectedType;
@@ -37,7 +37,7 @@ class AutoMapper
 		return resultList;
 	}
 
-	dynamic _mapCustomType( dynamic from, Type toType )
+	static dynamic _mapCustomType( dynamic from, Type toType )
 	{
 		var result = _instantiateType( toType );
 
@@ -64,7 +64,7 @@ class AutoMapper
 		return result;
 	}
 
-	dynamic map( dynamic from, Type toType )
+	static dynamic map( dynamic from, Type toType )
 	{
 		if ( _isPrimitive( from ) )
 		{
@@ -80,7 +80,7 @@ class AutoMapper
 		}
 	}
 
-	bool _propertyNamesMatch( VariableMirror variableMirror1, VariableMirror variableMirror2 )
+	static bool _propertyNamesMatch( VariableMirror variableMirror1, VariableMirror variableMirror2 )
 	=> _getVariableName( variableMirror1 ) == _getVariableName( variableMirror2 );
 
 }

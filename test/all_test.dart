@@ -9,14 +9,7 @@ main( )
 {
 	group( 'AutoMapper', ( )
 	{
-
-		AutoMapper mapper;
-
-		setUp( ( )
-			   {
-				   mapper = new AutoMapper( );
-			   } );
-
+		
 		test( 'Mapping from one type to another with only primitive properties correctly copies string property over', ( )
 		{
 			var dateTime = new DateTime.now( );
@@ -28,7 +21,7 @@ main( )
 				..boolProperty = true
 				..numProperty = 1;
 
-			TestDto testDto = mapper.map( testEntity, TestDto );
+			TestDto testDto = AutoMapper.map( testEntity, TestDto );
 
 			expect( testDto.stringProperty, "test" );
 			expect( testDto.intProperty, 1 );
@@ -46,7 +39,7 @@ main( )
 			var testEntity2 = new TestEntity2( )
 				..test = testEntity;
 
-			TestDto2 testDto = mapper.map( testEntity2, TestDto2 );
+			TestDto2 testDto = AutoMapper.map( testEntity2, TestDto2 );
 
 			expect( "test", testDto.test.stringProperty );
 		} );
@@ -57,7 +50,7 @@ main( )
 			var listEntity = new ListEntity( )
 				..list = [ "Hello", "World" ];
 
-			var result = mapper.map( listEntity, ListDto );
+			var result = AutoMapper.map( listEntity, ListDto );
 
 			expect( result.list, isNotNull );
 			expect( result.list, new isInstanceOf<List<String>>( ) );
@@ -73,7 +66,7 @@ main( )
 				..stringProperty = "Hello", new TestEntity( )
 				..stringProperty = "World"];
 
-			var result = mapper.map( nonPrimitiveListEntity, NonPrimitiveListDto );
+			var result = AutoMapper.map( nonPrimitiveListEntity, NonPrimitiveListDto );
 			expect( result.list[0], new isInstanceOf<TestDto>( ) );
 			expect( result.list[0].stringProperty, "Hello" );
 		} );
@@ -86,7 +79,7 @@ main( )
 				..stringProperty = "Hello", new TestEntity( )
 				..stringProperty = "World"] ) );
 
-			var result = mapper.map( customListEntity, CustomListDto );
+			var result = AutoMapper.map( customListEntity, CustomListDto );
 			expect( result.list, new isInstanceOf<CustomList<TestDto>>( ) );
 			expect( result.list[0].stringProperty, "Hello" );
 		} );
