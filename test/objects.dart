@@ -97,3 +97,27 @@ class InheritedEntity extends TestEntity
 {
 	int extraProperty;
 }
+
+
+abstract class BaseEntity
+{
+	int id;
+	String name;
+}
+
+
+abstract class BaseDto
+{
+	int id;
+	String name;
+}
+
+class ConcreteEntity extends BaseEntity
+{
+
+}
+
+class ConcreteDto extends BaseDto
+{
+
+}

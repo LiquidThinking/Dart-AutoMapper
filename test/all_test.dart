@@ -110,6 +110,14 @@ main( )
 			expect( testDto.extraProperty, 1 );
 		} );
 
+
+		test( 'Mapping from a specific type to a list of works when a type mapping has been declared', () {
+			var concreteEntity = new ConcreteEntity();
+			//TODO: Add type mappings here:
+
+			ConcreteDto testDto = AutoMapper.map( concreteEntity, BaseDto );
+		});
+
 	} );
 }
 
