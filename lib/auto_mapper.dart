@@ -91,10 +91,6 @@ class AutoMapper
 		else
 		{
 			var actualToType = _typeMaps.containsKey( fromType ) ? _typeMaps[fromType] : toType;
-
-			if ( reflectClass( actualToType ).isAbstract )
-				throw "Are you missing a type map from \"class ${fromType.toString( )}\" to \"abstract class ${actualToType.toString( )}\"";
-
 			return _mapCustomType( from, actualToType );
 		}
 	}
