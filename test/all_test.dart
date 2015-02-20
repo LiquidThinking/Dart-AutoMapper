@@ -115,9 +115,25 @@ main( )
 			var concreteEntity = new ConcreteEntity();
 			//TODO: Add type mappings here:
 
-			ConcreteDto testDto = AutoMapper.map( concreteEntity, BaseDto );
+			AutoMapper.createTypeMap(ConcreteEntity, ConcreteDto);
+
+			var testDto = AutoMapper.map( concreteEntity, BaseDto );
+
+			expect(testDto, new isInstanceOf<ConcreteDto>());
 		});
 
+		test( 'Mapping from a specific type to an abstract type throws use exception if no map exists', () {
+			var concreteEntity = new ConcreteWithNoMapEntity();
+			//TODO: Add type mappings here:
+
+			try{
+				AutoMapper.map( concreteEntity, BaseDto );
+				throw "Should throw exception about map";
+			}
+			catch(ex){
+				expect(ex, "Are you missing a type map from \"class ${(ConcreteWithNoMapEntity).toString( )}\" to \"abstract class ${(BaseDto).toString( )}\"");
+			}
+		});
 	} );
 }
 

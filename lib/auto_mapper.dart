@@ -4,6 +4,13 @@ import 'dart:mirrors';
 
 class AutoMapper
 {
+	static Map<Type, Type> _typeMaps = {
+	};
+
+	static void createTypeMap( Type fromType, Type toType )
+	{
+		_typeMaps[fromType] = toType;
+	}
 
 	static bool _isPrimitive( dynamic value )
 	{
@@ -13,11 +20,11 @@ class AutoMapper
 	static Iterable<DeclarationMirror> _getVariableMirrors( ClassMirror fromMirror )
 	{
 		var fromVariables = fromMirror.declarations.values.where( ( d )
-																	   => d is VariableMirror ).toList();
+																  => d is VariableMirror ).toList( );
 		var superClass = fromMirror.superclass;
 
-		if(superClass != null && superClass.reflectedType != Object)
-			fromVariables.addAll(_getVariableMirrors(superClass));
+		if ( superClass != null && superClass.reflectedType != Object )
+			fromVariables.addAll( _getVariableMirrors( superClass ) );
 
 		return fromVariables;
 	}
@@ -71,6 +78,8 @@ class AutoMapper
 
 	static dynamic map( dynamic from, Type toType )
 	{
+		var fromType = reflect( from ).type.reflectedType;
+
 		if ( _isPrimitive( from ) )
 		{
 			return from;
@@ -81,7 +90,12 @@ class AutoMapper
 		}
 		else
 		{
-			return _mapCustomType( from, toType );
+			var actualToType = _typeMaps.containsKey( fromType ) ? _typeMaps[fromType] : toType;
+
+			if ( reflectClass( actualToType ).isAbstract )
+				throw "Are you missing a type map from \"class ${fromType.toString( )}\" to \"abstract class ${actualToType.toString( )}\"";
+
+			return _mapCustomType( from, actualToType );
 		}
 	}
 

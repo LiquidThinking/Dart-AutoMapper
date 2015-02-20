@@ -121,3 +121,8 @@ class ConcreteDto extends BaseDto
 {
 
 }
+
+class ConcreteWithNoMapEntity extends BaseEntity
+{
+
+}
